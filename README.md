@@ -64,7 +64,7 @@ database. The service provides API running on top of HTTP in JSON format.
     - fields - If flag is equal to `true` show all fields.
   - Response:
 
-    ```json
+    ```jsonc
     // /api/adverts/:id
     {
       "id": 1,
@@ -73,7 +73,7 @@ database. The service provides API running on top of HTTP in JSON format.
     }
     ```
 
-    ```json
+    ```jsonc
     // /api/adverts/:id?fields=true
     {
       "id": 1,
