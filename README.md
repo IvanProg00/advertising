@@ -43,17 +43,20 @@ database. The service provides API running on top of HTTP in JSON format.
       {
         "id": 1,
         "title": "Advert 1",
-        "price": 10000
+        "price": 10000,
+        "created_at": "2002-10-02T15:00:00Z"
       },
       {
         "id": 2,
         "title": "Advert 2",
-        "price": 60000
+        "price": 60000,
+        "created_at": "2004-10-02T14:00:00Z"
       },
       {
         "id": 3,
         "title": "Advert 3",
-        "price": 30000
+        "price": 30000,
+        "created_at": "2007-10-02T13:00:00Z"
       }
     ]
     ```
@@ -69,7 +72,8 @@ database. The service provides API running on top of HTTP in JSON format.
     {
       "id": 1,
       "title": "Advert 1",
-      "price": 10000
+      "price": 10000,
+      "created_at": "2002-10-02T15:00:00Z"
     }
     ```
 
@@ -80,7 +84,8 @@ database. The service provides API running on top of HTTP in JSON format.
       "title": "Advert 1",
       "description": "Description 1",
       "photo": "link1",
-      "price": 10000
+      "price": 10000,
+      "created_at": "2002-10-02T15:00:00Z"
     }
     ```
 
