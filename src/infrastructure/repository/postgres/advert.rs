@@ -8,11 +8,11 @@ use crate::{
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
 use std::sync::Arc;
 
-pub struct Postgres {
+pub struct AdvertRepository {
     pub pool: Arc<PostgresPool>,
 }
 
-impl Postgres {
+impl AdvertRepository {
     pub fn new(pg_pool: PostgresPool) -> Self {
         Self {
             pool: Arc::new(pg_pool),
