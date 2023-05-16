@@ -57,4 +57,15 @@ impl AdvertRepository {
             .get_result::<DetailedAdvertDiesel>(&mut conn)
             .unwrap();
     }
+
+    pub fn delete_advert(&self, id: i32) {
+        use crate::infrastructure::schema::adverts::dsl::{self, adverts};
+
+        let mut conn = self.pool.get().unwrap();
+
+        diesel::delete(adverts)
+            .filter(dsl::id.eq(id))
+            .execute(&mut conn)
+            .unwrap();
+    }
 }
