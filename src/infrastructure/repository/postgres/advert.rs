@@ -2,6 +2,7 @@ use crate::{
     domain::{
         error::{RepositoryError, RepositoryResult},
         model::advert::{Advert, CreateAdvert, DetailedAdvert, UpdateAdvert},
+        repository::advert::AdvertRepository,
     },
     infrastructure::{
         database::postgres::PostgresPool,
@@ -11,18 +12,20 @@ use crate::{
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
 use std::sync::Arc;
 
-pub struct AdvertRepository {
+pub struct AdvertDieselRepository {
     pub pool: Arc<PostgresPool>,
 }
 
-impl AdvertRepository {
+impl AdvertDieselRepository {
     pub fn new(pg_pool: PostgresPool) -> Self {
         Self {
             pool: Arc::new(pg_pool),
         }
     }
+}
 
-    pub fn list_adverts(&self) -> RepositoryResult<Vec<Advert>> {
+impl AdvertRepository for AdvertDieselRepository {
+    fn list(&self) -> RepositoryResult<Vec<Advert>> {
         use crate::infrastructure::schema::adverts::dsl::{self, adverts};
 
         let mut conn = self.pool.clone().get().unwrap();
@@ -36,7 +39,7 @@ impl AdvertRepository {
         Ok(data.into_iter().map(|v| v.into()).collect())
     }
 
-    pub fn get_advert(&self, id: i32) -> RepositoryResult<DetailedAdvert> {
+    fn get(&self, id: i32) -> RepositoryResult<DetailedAdvert> {
         use crate::infrastructure::schema::adverts::dsl::{self, adverts};
 
         let mut conn = self.pool.get().unwrap();
@@ -48,7 +51,7 @@ impl AdvertRepository {
         Ok(result.into())
     }
 
-    pub fn create_advert(&self, advert: CreateAdvert) -> RepositoryResult<DetailedAdvert> {
+    fn create(&self, advert: CreateAdvert) -> RepositoryResult<DetailedAdvert> {
         use crate::infrastructure::schema::adverts::dsl::adverts;
 
         let mut conn = self.pool.clone().get().unwrap();
@@ -62,7 +65,7 @@ impl AdvertRepository {
         Ok(result)
     }
 
-    pub fn delete_advert(&self, id: i32) -> RepositoryResult<()> {
+    fn delete(&self, id: i32) -> RepositoryResult<()> {
         use crate::infrastructure::schema::adverts::dsl::{self, adverts};
 
         let mut conn = self.pool.get().unwrap();
@@ -74,7 +77,7 @@ impl AdvertRepository {
         Ok(())
     }
 
-    pub fn update_advert(&self, id: i32, advert: UpdateAdvert) -> RepositoryResult<DetailedAdvert> {
+    fn update(&self, id: i32, advert: UpdateAdvert) -> RepositoryResult<DetailedAdvert> {
         use crate::infrastructure::schema::adverts::dsl::{self, adverts};
 
         let mut conn = self.pool.get().unwrap();
