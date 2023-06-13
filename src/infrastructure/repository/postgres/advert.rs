@@ -1,5 +1,8 @@
 use crate::{
-    domain::model::advert::{Advert, CreateAdvert, DetailedAdvert},
+    domain::{
+        error::{RepositoryError, RepositoryResult},
+        model::advert::{Advert, CreateAdvert, DetailedAdvert},
+    },
     infrastructure::{
         database::postgres::PostgresPool,
         model::advert::{AdvertDiesel, CreateAdvertDiesel, DetailedAdvertDiesel},
@@ -19,53 +22,59 @@ impl AdvertRepository {
         }
     }
 
-    pub fn list_adverts(&self) -> Vec<Advert> {
+    pub fn list_adverts(&self) -> RepositoryResult<Vec<Advert>> {
         use crate::infrastructure::schema::adverts::dsl::{self, adverts};
 
         let mut conn = self.pool.clone().get().unwrap();
 
-        let result = adverts
+        let data = adverts
             .select((dsl::id, dsl::title, dsl::price, dsl::created_at))
             .limit(50)
             .load::<AdvertDiesel>(&mut conn)
-            .unwrap();
+            .map_err(RepositoryError::from)?;
 
-        result.into_iter().map(|v| v.into()).collect()
+        Ok(data.into_iter().map(|v| v.into()).collect())
     }
 
-    pub fn get_advert(&self, id: i32) -> DetailedAdvert {
+    pub fn get_advert(&self, id: i32) -> RepositoryResult<DetailedAdvert> {
         use crate::infrastructure::schema::adverts::dsl::{self, adverts};
 
         let mut conn = self.pool.get().unwrap();
 
         let result = adverts
             .filter(dsl::id.eq(id))
-            .first::<DetailedAdvertDiesel>(&mut conn)
-            .unwrap();
+            .first::<DetailedAdvertDiesel>(&mut conn)?;
 
-        result.into()
+        Ok(result.into())
     }
 
-    pub fn create_advert(&self, advert: CreateAdvert) {
+    pub fn create_advert(&self, advert: CreateAdvert) -> RepositoryResult<DetailedAdvert> {
         use crate::infrastructure::schema::adverts::dsl::adverts;
 
         let mut conn = self.pool.clone().get().unwrap();
         let advert = CreateAdvertDiesel::from(advert);
 
-        diesel::insert_into(adverts)
+        let result = diesel::insert_into(adverts)
             .values(advert)
-            .get_result::<DetailedAdvertDiesel>(&mut conn)
-            .unwrap();
+            .get_result::<DetailedAdvertDiesel>(&mut conn)?
+            .into();
+
+        Ok(result)
     }
 
-    pub fn delete_advert(&self, id: i32) {
+    pub fn delete_advert(&self, id: i32) -> RepositoryResult<()> {
         use crate::infrastructure::schema::adverts::dsl::{self, adverts};
 
         let mut conn = self.pool.get().unwrap();
 
         diesel::delete(adverts)
             .filter(dsl::id.eq(id))
-            .execute(&mut conn)
-            .unwrap();
+            .execute(&mut conn)?;
+
+        Ok(())
+    }
+
+    pub fn update_advert(&self) {
+        todo!()
     }
 }
