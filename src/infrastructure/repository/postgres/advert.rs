@@ -1,7 +1,7 @@
 use crate::{
     domain::{
         error::{RepositoryError, RepositoryResult},
-        model::advert::{Advert, CreateAdvert, DetailedAdvert},
+        model::advert::{Advert, CreateAdvert, DetailedAdvert, UpdateAdvert},
     },
     infrastructure::{
         database::postgres::PostgresPool,
@@ -74,7 +74,21 @@ impl AdvertRepository {
         Ok(())
     }
 
-    pub fn update_advert(&self) {
-        todo!()
+    pub fn update_advert(&self, id: i32, advert: UpdateAdvert) -> RepositoryResult<DetailedAdvert> {
+        use crate::infrastructure::schema::adverts::dsl::{self, adverts};
+
+        let mut conn = self.pool.get().unwrap();
+
+        let result = diesel::update(adverts.filter(dsl::id.eq(id)))
+            .set((
+                dsl::title.eq(advert.title),
+                dsl::description.eq(advert.description),
+                dsl::photo.eq(advert.photo),
+                dsl::price.eq(advert.price),
+            ))
+            .get_result::<DetailedAdvertDiesel>(&mut conn)?
+            .into();
+
+        Ok(result)
     }
 }

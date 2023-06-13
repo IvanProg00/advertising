@@ -25,3 +25,10 @@ pub struct CreateAdvert {
     pub photo: String,
     pub price: Cents,
 }
+
+pub struct UpdateAdvert {
+    pub title: String,
+    pub description: String,
+    pub photo: String,
+    pub price: Cents,
+}
