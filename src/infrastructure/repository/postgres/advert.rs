@@ -2,7 +2,7 @@ use crate::{
     domain::{
         error::{RepositoryError, RepositoryResult},
         model::advert::{Advert, CreateAdvert, DetailedAdvert, UpdateAdvert},
-        repository::advert::AdvertRepository,
+        repository::advert::{AdvertQueryParams, AdvertRepository},
     },
     infrastructure::{
         database::postgres::PostgresPool,
@@ -25,14 +25,15 @@ impl AdvertDieselRepository {
 }
 
 impl AdvertRepository for AdvertDieselRepository {
-    fn list(&self) -> RepositoryResult<Vec<Advert>> {
+    fn list(&self, params: AdvertQueryParams) -> RepositoryResult<Vec<Advert>> {
         use crate::infrastructure::schema::adverts::dsl::{self, adverts};
 
         let mut conn = self.pool.clone().get().unwrap();
 
         let data = adverts
             .select((dsl::id, dsl::title, dsl::price, dsl::created_at))
-            .limit(50)
+            .limit(params.limit)
+            .offset(params.offset)
             .load::<AdvertDiesel>(&mut conn)
             .map_err(RepositoryError::from)?;
 

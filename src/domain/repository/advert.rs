@@ -3,8 +3,13 @@ use crate::domain::{
     model::advert::{Advert, CreateAdvert, DetailedAdvert, UpdateAdvert},
 };
 
+pub struct AdvertQueryParams {
+    pub limit: i64,
+    pub offset: i64,
+}
+
 pub trait AdvertRepository {
-    fn list(&self) -> RepositoryResult<Vec<Advert>>;
+    fn list(&self, params: AdvertQueryParams) -> RepositoryResult<Vec<Advert>>;
     fn get(&self, id: i32) -> RepositoryResult<DetailedAdvert>;
     fn create(&self, advert: CreateAdvert) -> RepositoryResult<DetailedAdvert>;
     fn delete(&self, id: i32) -> RepositoryResult<()>;
