@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  check:
+    name: Build, Lint and Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+
+      - name: Install stable toolchain
+        uses: dtolnay/rust-toolchain@1.70
+        with:
+          components: rustfmt, clippy
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Run cargo check
+        run: cargo check
+
+      - name: Build
+        run: cargo build --verbose
+
+      - name: Run cargo fmt
+        run: cargo fmt --all --check
+
+      - name: Run cargo clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+      - name: Run tests
+        run: cargo test --verbose
+
+      - name: Run cargo doc
+        run: cargo doc --no-deps --workspace --document-private-items
+        env:
+          RUSTDOCFLAGS: -D warnings
