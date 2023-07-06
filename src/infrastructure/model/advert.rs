@@ -18,7 +18,7 @@ impl From<AdvertDiesel> for Advert {
         Self {
             id: a.id,
             title: a.title,
-            price: a.price,
+            price: a.price.0,
             created_at: a.created_at,
         }
     }
@@ -41,7 +41,7 @@ impl From<DetailedAdvertDiesel> for DetailedAdvert {
             title: a.title,
             description: a.description,
             photo: a.photo,
-            price: a.price,
+            price: a.price.0,
             created_at: a.created_at,
         }
     }
@@ -62,7 +62,7 @@ impl From<CreateAdvert> for CreateAdvertDiesel {
             title: a.title,
             description: a.description,
             photo: a.photo,
-            price: a.price,
+            price: Cents(a.price),
         }
     }
 }

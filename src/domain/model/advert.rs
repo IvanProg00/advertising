@@ -1,13 +1,11 @@
 use crate::api::dto::advert::CreateAdvertDTO;
 use chrono::NaiveDateTime;
-use diesel::data_types::Cents;
 
 #[derive(Debug)]
 pub struct Advert {
     pub id: i32,
     pub title: String,
-    // TODO: Change to iso_currency::Currency
-    pub price: Cents,
+    pub price: i64,
     pub created_at: NaiveDateTime,
 }
 
@@ -17,8 +15,7 @@ pub struct DetailedAdvert {
     pub title: String,
     pub description: String,
     pub photo: String,
-    // TODO: Change to iso_currency::Currency
-    pub price: Cents,
+    pub price: i64,
     pub created_at: NaiveDateTime,
 }
 
@@ -26,16 +23,14 @@ pub struct CreateAdvert {
     pub title: String,
     pub description: String,
     pub photo: String,
-    // TODO: Change to iso_currency::Currency
-    pub price: Cents,
+    pub price: i64,
 }
 
 pub struct UpdateAdvert {
     pub title: String,
     pub description: String,
     pub photo: String,
-    // TODO: Change to iso_currency::Currency
-    pub price: Cents,
+    pub price: i64,
 }
 
 impl From<CreateAdvertDTO> for CreateAdvert {
@@ -44,7 +39,7 @@ impl From<CreateAdvertDTO> for CreateAdvert {
             title: advert.title,
             description: advert.description,
             photo: advert.photo,
-            price: diesel::data_types::Cents(advert.price),
+            price: advert.price,
         }
     }
 }

@@ -9,6 +9,7 @@ use crate::{
         model::advert::{AdvertDiesel, CreateAdvertDiesel, DetailedAdvertDiesel},
     },
 };
+use diesel::data_types::Cents;
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
 use std::sync::Arc;
 
@@ -88,7 +89,7 @@ impl AdvertRepository for AdvertDieselRepository {
                 dsl::title.eq(advert.title),
                 dsl::description.eq(advert.description),
                 dsl::photo.eq(advert.photo),
-                dsl::price.eq(advert.price),
+                dsl::price.eq(Cents(advert.price)),
             ))
             .get_result::<DetailedAdvertDiesel>(&mut conn)?
             .into();

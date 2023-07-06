@@ -16,7 +16,7 @@ impl From<advert::Advert> for AdvertDTO {
         Self {
             id: advert.id,
             title: advert.title,
-            price: advert.price.0,
+            price: advert.price,
             created_at: advert.created_at,
         }
     }
@@ -39,7 +39,7 @@ impl From<advert::DetailedAdvert> for DetailedAdvertDTO {
             title: advert.title,
             description: advert.description,
             photo: advert.photo,
-            price: advert.price.0,
+            price: advert.price,
             created_at: advert.created_at,
         }
     }
