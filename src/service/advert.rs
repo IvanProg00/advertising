@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use crate::domain::{
     error::CommonError,
-    model::advert::{Advert, DetailedAdvert},
+    model::advert::{Advert, CreateAdvert, DetailedAdvert},
     repository::advert::{AdvertQueryParams, AdvertRepository},
 };
 
@@ -24,7 +24,9 @@ impl AdvertService {
         self.repository.get(id).map_err(|e| e.into())
     }
 
-    // fn create(&self, advert: CreateAdvert) -> RepositoryResult<DetailedAdvert>;
-    // fn delete(&self, id: i32) -> RepositoryResult<()>;
-    // fn update(&self, id: i32, advert: UpdateAdvert) -> RepositoryResult<DetailedAdvert>;
+    pub fn create(&self, advert: CreateAdvert) -> Result<DetailedAdvert, CommonError> {
+        self.repository.create(advert).map_err(|e| e.into())
+    }
+    // pub fn delete(&self, id: i32) -> RepositoryResult<()>;
+    // pub fn update(&self, id: i32, advert: UpdateAdvert) -> RepositoryResult<DetailedAdvert>;
 }

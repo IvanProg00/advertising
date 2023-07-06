@@ -1,5 +1,5 @@
 use crate::{
-    api::dto::advert::{AdvertDTO, DetailedAdvertDTO},
+    api::dto::advert::{AdvertDTO, CreateAdvertDTO, DetailedAdvertDTO},
     domain::{error::CommonError, repository::advert::AdvertQueryParams},
     service::advert::AdvertService,
 };
@@ -29,6 +29,15 @@ pub async fn get(
     path: web::Path<Get>,
 ) -> Result<web::Json<DetailedAdvertDTO>, CommonError> {
     let data = advert_service.get(path.id)?;
+
+    Ok(web::Json(data.into()))
+}
+
+pub async fn create(
+    advert_service: web::Data<AdvertService>,
+    advert: web::Json<CreateAdvertDTO>,
+) -> Result<web::Json<DetailedAdvertDTO>, CommonError> {
+    let data = advert_service.create(advert.into_inner().into())?;
 
     Ok(web::Json(data.into()))
 }

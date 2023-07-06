@@ -1,7 +1,6 @@
-use chrono::NaiveDateTime;
-use serde::Serialize;
-
 use crate::domain::model::advert;
+use chrono::NaiveDateTime;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize)]
 pub struct AdvertDTO {
@@ -44,4 +43,12 @@ impl From<advert::DetailedAdvert> for DetailedAdvertDTO {
             created_at: advert.created_at,
         }
     }
+}
+
+#[derive(Deserialize)]
+pub struct CreateAdvertDTO {
+    pub title: String,
+    pub description: String,
+    pub photo: String,
+    pub price: i64,
 }
