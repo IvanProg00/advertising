@@ -1,12 +1,12 @@
 use crate::domain::model::advert;
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, ToSchema)]
 pub struct AdvertDTO {
     pub id: i32,
     pub title: String,
-    // TODO: change to type money
     pub price: i64,
     pub created_at: NaiveDateTime,
 }

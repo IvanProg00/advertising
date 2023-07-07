@@ -11,6 +11,15 @@ pub struct Get {
     id: i32,
 }
 
+/// List adverts
+#[utoipa::path(
+    get,
+    path = "/adverts",
+    responses(
+        (status = 200, description = "List of adverts", body = [AdvertDTO]),
+    )
+)]
+// #[web::get("/adverts")]
 pub async fn list(
     advert_service: web::Data<AdvertService>,
 ) -> Result<web::Json<Vec<AdvertDTO>>, CommonError> {

@@ -1,18 +1,19 @@
-use std::sync::Arc;
-
 use actix_web::{
     middleware::Logger,
     web::{self, Data},
     App, HttpResponse, HttpServer,
 };
 use advertising::{
-    api,
+    api::{self, dto},
     infrastructure::{database, repository::postgres::advert::AdvertDieselRepository},
     service::advert::AdvertService,
     setting,
 };
 use dotenvy::dotenv;
 use env_logger::Env;
+use std::sync::Arc;
+use utoipa::OpenApi;
+use utoipa_swagger_ui::SwaggerUi;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -21,6 +22,20 @@ async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(Env::default().default_filter_or("debug"));
     let pg_pool = database::postgres::new(s.database_url.clone());
     let advert_repo = Arc::new(AdvertDieselRepository::new(pg_pool));
+
+    #[derive(OpenApi)]
+    #[openapi(
+        paths(api::controller::advert::list),
+        components(
+            schemas(dto::advert::AdvertDTO),
+        ),
+        tags(
+            (name = "adverts", description = "Adverts endpoints.")
+        )
+    )]
+    struct ApiDoc;
+
+    let openapi = ApiDoc::openapi();
 
     HttpServer::new(move || {
         let advert_svc = AdvertService::new(advert_repo.clone());
@@ -35,6 +50,9 @@ async fn main() -> std::io::Result<()> {
                     web::scope("/v1")
                         .service(web::scope("/adverts").configure(api::advert::create_service)),
                 ),
+            )
+            .service(
+                SwaggerUi::new("/swagger-ui/{_:.*}").url("/api-docs/openapi.json", openapi.clone()),
             )
     })
     .bind(s.host)?
