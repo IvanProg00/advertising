@@ -22,7 +22,7 @@ impl From<advert::Advert> for AdvertDTO {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 pub struct DetailedAdvertDTO {
     pub id: i32,
     pub title: String,
@@ -45,7 +45,7 @@ impl From<advert::DetailedAdvert> for DetailedAdvertDTO {
     }
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 pub struct CreateAdvertDTO {
     pub title: String,
     pub description: String,

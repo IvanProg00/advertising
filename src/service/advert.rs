@@ -1,10 +1,9 @@
-use std::sync::Arc;
-
 use crate::domain::{
     error::CommonError,
     model::advert::{Advert, CreateAdvert, DetailedAdvert},
     repository::advert::{AdvertQueryParams, AdvertRepository},
 };
+use std::sync::Arc;
 
 #[derive(Clone)]
 pub struct AdvertService {

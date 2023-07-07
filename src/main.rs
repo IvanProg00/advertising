@@ -4,8 +4,9 @@ use actix_web::{
     App, HttpResponse, HttpServer,
 };
 use advertising::{
-    api::{self, dto},
+    api,
     infrastructure::{database, repository::postgres::advert::AdvertDieselRepository},
+    openapi::ApiDoc,
     service::advert::AdvertService,
     setting,
 };
@@ -20,20 +21,9 @@ async fn main() -> std::io::Result<()> {
     dotenv().ok();
     let s = setting::Setting::from_env().unwrap();
     env_logger::init_from_env(Env::default().default_filter_or("debug"));
+
     let pg_pool = database::postgres::new(s.database_url.clone());
     let advert_repo = Arc::new(AdvertDieselRepository::new(pg_pool));
-
-    #[derive(OpenApi)]
-    #[openapi(
-        paths(api::controller::advert::list),
-        components(
-            schemas(dto::advert::AdvertDTO),
-        ),
-        tags(
-            (name = "adverts", description = "Adverts endpoints.")
-        )
-    )]
-    struct ApiDoc;
 
     let openapi = ApiDoc::openapi();
 

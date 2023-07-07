@@ -15,11 +15,11 @@ pub struct Get {
 #[utoipa::path(
     get,
     path = "/adverts",
+    tag = "Adverts",
     responses(
         (status = 200, description = "List of adverts", body = [AdvertDTO]),
     )
 )]
-// #[web::get("/adverts")]
 pub async fn list(
     advert_service: web::Data<AdvertService>,
 ) -> Result<web::Json<Vec<AdvertDTO>>, CommonError> {
@@ -33,6 +33,15 @@ pub async fn list(
     Ok(web::Json(resp))
 }
 
+/// Get advert by id
+#[utoipa::path(
+    get,
+    path = "/adverts/{id}",
+    tag = "Adverts",
+    responses(
+        (status = 200, description = "Get advert", body = DetailedAdvertDTO),
+    )
+)]
 pub async fn get(
     advert_service: web::Data<AdvertService>,
     path: web::Path<Get>,
@@ -42,6 +51,16 @@ pub async fn get(
     Ok(web::Json(data.into()))
 }
 
+/// Create advert
+#[utoipa::path(
+    post,
+    path = "/adverts",
+    tag = "Adverts",
+    request_body = CreateAdvertDTO,
+    responses(
+        (status = 200, description = "Advert created", body = DetailedAdvertDTO),
+    )
+)]
 pub async fn create(
     advert_service: web::Data<AdvertService>,
     advert: web::Json<CreateAdvertDTO>,
