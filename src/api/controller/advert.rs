@@ -1,18 +1,15 @@
 use crate::{
-    api::dto::advert::{AdvertDTO, CreateAdvertDTO, DetailedAdvertDTO},
+    api::dto::advert::{AdvertDTO, CreateAdvertDTO, DetailedAdvertDTO, UpdateAdvertDTO},
     domain::{error::CommonError, repository::advert::AdvertQueryParams},
     service::advert::AdvertService,
 };
 use actix_web::{web, HttpResponse, Responder};
 use serde::Deserialize;
+use utoipa::IntoParams;
 
-#[derive(Deserialize)]
-pub struct Get {
-    id: i32,
-}
-
-#[derive(Deserialize)]
-pub struct Delete {
+#[derive(Deserialize, IntoParams)]
+pub struct IdParam {
+    /// Advert id
     id: i32,
 }
 
@@ -45,11 +42,14 @@ pub async fn list(
     tag = "Adverts",
     responses(
         (status = StatusCode::OK, description = "Get advert", body = DetailedAdvertDTO),
+    ),
+    params(
+        IdParam
     )
 )]
 pub async fn get(
     advert_service: web::Data<AdvertService>,
-    path: web::Path<Get>,
+    path: web::Path<IdParam>,
 ) -> Result<web::Json<DetailedAdvertDTO>, CommonError> {
     let data = advert_service.get(path.id)?;
 
@@ -84,14 +84,37 @@ pub async fn create(
         (status = StatusCode::NO_CONTENT, description = "Advert deleted"),
     ),
     params(
-        ("id" = String, Path, description = "Advert id"),
+        IdParam,
     )
 )]
 pub async fn delete(
     advert_service: web::Data<AdvertService>,
-    path: web::Path<Delete>,
+    path: web::Path<IdParam>,
 ) -> Result<impl Responder, CommonError> {
     advert_service.delete(path.id)?;
 
     Ok(HttpResponse::NoContent().finish())
+}
+
+/// Update advert by id
+#[utoipa::path(
+    put,
+    path = "/adverts/{id}",
+    tag = "Adverts",
+    request_body = UpdateAdvertDTO,
+    responses(
+        (status = StatusCode::OK, description = "Advert updated", body = DetailedAdvertDTO),
+    ),
+    params(
+        IdParam,
+    )
+)]
+pub async fn update(
+    advert_service: web::Data<AdvertService>,
+    path: web::Path<IdParam>,
+    advert: web::Json<UpdateAdvertDTO>,
+) -> Result<web::Json<DetailedAdvertDTO>, CommonError> {
+    let data = advert_service.update(path.id, advert.into_inner().into())?;
+
+    Ok(web::Json(data.into()))
 }

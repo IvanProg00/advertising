@@ -6,5 +6,6 @@ pub fn create_service(service: &mut web::ServiceConfig) {
         .route("", web::get().to(advert::list))
         .route("/{id}", web::get().to(advert::get))
         .route("/{id}", web::delete().to(advert::delete))
-        .route("", web::post().to(advert::create));
+        .route("", web::post().to(advert::create))
+        .route("/{id}", web::put().to(advert::update));
 }

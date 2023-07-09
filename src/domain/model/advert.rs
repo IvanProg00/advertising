@@ -1,4 +1,4 @@
-use crate::api::dto::advert::CreateAdvertDTO;
+use crate::api::dto::advert::{CreateAdvertDTO, UpdateAdvertDTO};
 use chrono::NaiveDateTime;
 
 #[derive(Debug)]
@@ -35,6 +35,17 @@ pub struct UpdateAdvert {
 
 impl From<CreateAdvertDTO> for CreateAdvert {
     fn from(advert: CreateAdvertDTO) -> Self {
+        Self {
+            title: advert.title,
+            description: advert.description,
+            photo: advert.photo,
+            price: advert.price,
+        }
+    }
+}
+
+impl From<UpdateAdvertDTO> for UpdateAdvert {
+    fn from(advert: UpdateAdvertDTO) -> Self {
         Self {
             title: advert.title,
             description: advert.description,

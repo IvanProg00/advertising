@@ -52,3 +52,11 @@ pub struct CreateAdvertDTO {
     pub photo: String,
     pub price: i64,
 }
+
+#[derive(Deserialize, ToSchema)]
+pub struct UpdateAdvertDTO {
+    pub title: String,
+    pub description: String,
+    pub photo: String,
+    pub price: i64,
+}
