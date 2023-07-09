@@ -26,6 +26,10 @@ impl AdvertService {
     pub fn create(&self, advert: CreateAdvert) -> Result<DetailedAdvert, CommonError> {
         self.repository.create(advert).map_err(|e| e.into())
     }
-    // pub fn delete(&self, id: i32) -> RepositoryResult<()>;
+
+    pub fn delete(&self, id: i32) -> Result<(), CommonError> {
+        self.repository.delete(id).map_err(|e| e.into())
+    }
+
     // pub fn update(&self, id: i32, advert: UpdateAdvert) -> RepositoryResult<DetailedAdvert>;
 }

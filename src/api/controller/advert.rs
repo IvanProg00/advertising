@@ -3,11 +3,16 @@ use crate::{
     domain::{error::CommonError, repository::advert::AdvertQueryParams},
     service::advert::AdvertService,
 };
-use actix_web::web;
+use actix_web::{web, HttpResponse, Responder};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
 pub struct Get {
+    id: i32,
+}
+
+#[derive(Deserialize)]
+pub struct Delete {
     id: i32,
 }
 
@@ -17,7 +22,7 @@ pub struct Get {
     path = "/adverts",
     tag = "Adverts",
     responses(
-        (status = 200, description = "List of adverts", body = [AdvertDTO]),
+        (status = StatusCode::OK, description = "List of adverts", body = [AdvertDTO]),
     )
 )]
 pub async fn list(
@@ -39,7 +44,7 @@ pub async fn list(
     path = "/adverts/{id}",
     tag = "Adverts",
     responses(
-        (status = 200, description = "Get advert", body = DetailedAdvertDTO),
+        (status = StatusCode::OK, description = "Get advert", body = DetailedAdvertDTO),
     )
 )]
 pub async fn get(
@@ -58,14 +63,35 @@ pub async fn get(
     tag = "Adverts",
     request_body = CreateAdvertDTO,
     responses(
-        (status = 200, description = "Advert created", body = DetailedAdvertDTO),
+        (status = StatusCode::CREATED, description = "Advert created", body = DetailedAdvertDTO),
     )
 )]
 pub async fn create(
     advert_service: web::Data<AdvertService>,
     advert: web::Json<CreateAdvertDTO>,
-) -> Result<web::Json<DetailedAdvertDTO>, CommonError> {
-    let data = advert_service.create(advert.into_inner().into())?;
+) -> Result<impl Responder, CommonError> {
+    let data: DetailedAdvertDTO = advert_service.create(advert.into_inner().into())?.into();
 
-    Ok(web::Json(data.into()))
+    Ok(HttpResponse::Created().json(data))
+}
+
+/// Delete advert by id
+#[utoipa::path(
+    delete,
+    path = "/adverts/{id}",
+    tag = "Adverts",
+    responses(
+        (status = StatusCode::NO_CONTENT, description = "Advert deleted"),
+    ),
+    params(
+        ("id" = String, Path, description = "Advert id"),
+    )
+)]
+pub async fn delete(
+    advert_service: web::Data<AdvertService>,
+    path: web::Path<Delete>,
+) -> Result<impl Responder, CommonError> {
+    advert_service.delete(path.id)?;
+
+    Ok(HttpResponse::NoContent().finish())
 }
