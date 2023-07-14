@@ -3,8 +3,9 @@ use crate::domain::{
     model::advert::{Advert, CreateAdvert, DetailedAdvert, UpdateAdvert},
 };
 use serde::Deserialize;
+use utoipa::IntoParams;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, IntoParams)]
 pub struct AdvertQueryParams {
     size: Option<i64>,
     offset: Option<i64>,

@@ -18,6 +18,9 @@ pub struct IdParam {
     get,
     path = "/adverts",
     tag = "Adverts",
+    params(
+        AdvertQueryParams
+    ),
     responses(
         (status = StatusCode::OK, description = "List of adverts", body = [AdvertDTO]),
     )
