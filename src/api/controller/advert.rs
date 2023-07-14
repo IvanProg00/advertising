@@ -24,12 +24,9 @@ pub struct IdParam {
 )]
 pub async fn list(
     advert_service: web::Data<AdvertService>,
+    params: web::Query<AdvertQueryParams>,
 ) -> Result<web::Json<Vec<AdvertDTO>>, CommonError> {
-    let data = advert_service.list(AdvertQueryParams {
-        offset: 0,
-        limit: 5,
-    })?;
-
+    let data = advert_service.list(params.into_inner())?;
     let resp = data.into_iter().map(|val| val.into()).collect();
 
     Ok(web::Json(resp))

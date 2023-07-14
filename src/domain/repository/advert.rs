@@ -2,10 +2,12 @@ use crate::domain::{
     error::RepositoryResult,
     model::advert::{Advert, CreateAdvert, DetailedAdvert, UpdateAdvert},
 };
+use serde::Deserialize;
 
+#[derive(Deserialize)]
 pub struct AdvertQueryParams {
-    pub limit: i64,
-    pub offset: i64,
+    size: Option<i64>,
+    offset: Option<i64>,
 }
 
 pub trait AdvertRepository {
@@ -14,4 +16,14 @@ pub trait AdvertRepository {
     fn create(&self, advert: CreateAdvert) -> RepositoryResult<DetailedAdvert>;
     fn delete(&self, id: i32) -> RepositoryResult<()>;
     fn update(&self, id: i32, advert: UpdateAdvert) -> RepositoryResult<DetailedAdvert>;
+}
+
+impl AdvertQueryParams {
+    pub fn size(&self) -> i64 {
+        self.size.unwrap_or(super::DEFAULT_SIZE)
+    }
+
+    pub fn offset(&self) -> i64 {
+        self.offset.unwrap_or(super::DEFAULT_OFFSET)
+    }
 }

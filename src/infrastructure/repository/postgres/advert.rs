@@ -33,8 +33,8 @@ impl AdvertRepository for AdvertDieselRepository {
 
         let data = adverts
             .select((dsl::id, dsl::title, dsl::price, dsl::created_at))
-            .limit(params.limit)
-            .offset(params.offset)
+            .limit(params.size())
+            .offset(params.offset())
             .load::<AdvertDiesel>(&mut conn)
             .map_err(RepositoryError::from)?;
 
