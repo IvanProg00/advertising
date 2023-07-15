@@ -1,7 +1,7 @@
 use actix_web::{
     middleware::Logger,
     web::{self, Data},
-    App, HttpResponse, HttpServer,
+    App, HttpServer,
 };
 use advertising::{
     api,
@@ -34,7 +34,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::default())
             .wrap(Logger::new("%a %{User-Agent}i"))
             .app_data(Data::new(advert_svc))
-            .route("/health", web::get().to(HttpResponse::NoContent))
+            .configure(api::create_service)
             .service(
                 web::scope("/api").service(
                     web::scope("/v1")
