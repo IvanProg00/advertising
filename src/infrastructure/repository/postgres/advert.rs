@@ -41,6 +41,15 @@ impl AdvertRepository for AdvertDieselRepository {
         Ok(data.into_iter().map(|v| v.into()).collect())
     }
 
+    fn count(&self) -> RepositoryResult<i64> {
+        use crate::infrastructure::schema::adverts::dsl::adverts;
+
+        let mut conn = self.pool.clone().get().unwrap();
+        let count = adverts.count().get_result(&mut conn)?;
+
+        Ok(count)
+    }
+
     fn get(&self, id: i32) -> RepositoryResult<DetailedAdvert> {
         use crate::infrastructure::schema::adverts::dsl::{self, adverts};
 

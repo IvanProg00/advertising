@@ -1,5 +1,8 @@
 use crate::{
-    api::dto::advert::{AdvertDTO, CreateAdvertDTO, DetailedAdvertDTO, UpdateAdvertDTO},
+    api::dto::{
+        advert::{AdvertDTO, CreateAdvertDTO, DetailedAdvertDTO, UpdateAdvertDTO},
+        ListPaging,
+    },
     domain::{error::CommonError, repository::advert::AdvertQueryParams},
     service::advert::AdvertService,
 };
@@ -22,17 +25,25 @@ pub struct IdParam {
         AdvertQueryParams
     ),
     responses(
-        (status = StatusCode::OK, description = "List of adverts", body = [AdvertDTO]),
+        (status = StatusCode::OK, description = "List of adverts", body = ListPagingAdverts),
     )
 )]
 pub async fn list(
     advert_service: web::Data<AdvertService>,
     params: web::Query<AdvertQueryParams>,
-) -> Result<web::Json<Vec<AdvertDTO>>, CommonError> {
-    let data = advert_service.list(params.into_inner())?;
-    let resp = data.into_iter().map(|val| val.into()).collect();
+) -> Result<web::Json<ListPaging<AdvertDTO>>, CommonError> {
+    let data = advert_service
+        .list(params.into_inner())?
+        .into_iter()
+        .map(|val| val.into())
+        .collect();
 
-    Ok(web::Json(resp))
+    let count = advert_service.count()?;
+
+    Ok(web::Json(ListPaging {
+        size: count,
+        items: data,
+    }))
 }
 
 /// Get advert by id

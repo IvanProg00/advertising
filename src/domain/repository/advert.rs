@@ -13,6 +13,7 @@ pub struct AdvertQueryParams {
 
 pub trait AdvertRepository {
     fn list(&self, params: AdvertQueryParams) -> RepositoryResult<Vec<Advert>>;
+    fn count(&self) -> RepositoryResult<i64>;
     fn get(&self, id: i32) -> RepositoryResult<DetailedAdvert>;
     fn create(&self, advert: CreateAdvert) -> RepositoryResult<DetailedAdvert>;
     fn delete(&self, id: i32) -> RepositoryResult<()>;

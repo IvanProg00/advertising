@@ -19,6 +19,10 @@ impl AdvertService {
         self.repository.list(params).map_err(|e| e.into())
     }
 
+    pub fn count(&self) -> Result<i64, CommonError> {
+        self.repository.count().map_err(|e| e.into())
+    }
+
     pub fn get(&self, id: i32) -> Result<DetailedAdvert, CommonError> {
         self.repository.get(id).map_err(|e| e.into())
     }

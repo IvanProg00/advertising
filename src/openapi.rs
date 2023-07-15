@@ -12,8 +12,8 @@ use utoipa::OpenApi;
     ),
     components(
         schemas(
-            dto::advert::AdvertDTO, dto::advert::DetailedAdvertDTO, dto::advert::CreateAdvertDTO,
-            dto::advert::UpdateAdvertDTO,
+            dto::ListPagingAdverts, dto::advert::AdvertDTO, dto::advert::DetailedAdvertDTO,
+            dto::advert::CreateAdvertDTO, dto::advert::UpdateAdvertDTO,
         ),
     ),
     tags(
