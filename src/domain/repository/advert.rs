@@ -3,12 +3,23 @@ use crate::domain::{
     model::advert::{Advert, CreateAdvert, DetailedAdvert, UpdateAdvert},
 };
 use serde::Deserialize;
-use utoipa::IntoParams;
+use utoipa::{IntoParams, ToSchema};
+
+#[derive(Deserialize, ToSchema, Default)]
+#[serde(rename_all = "snake_case")]
+pub enum AdvertSortBy {
+    CreatedAtAsc,
+    #[default]
+    CreatedAtDesc,
+    PriceAsc,
+    PriceDesc,
+}
 
 #[derive(Deserialize, IntoParams)]
 pub struct AdvertQueryParams {
     size: Option<i64>,
     offset: Option<i64>,
+    pub sort_by: AdvertSortBy,
 }
 
 pub trait AdvertRepository {

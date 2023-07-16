@@ -200,6 +200,7 @@ dependencies = [
  "dotenvy",
  "env_logger",
  "serde",
+ "serde_json",
  "thiserror",
  "utoipa",
  "utoipa-swagger-ui",

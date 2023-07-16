@@ -1,4 +1,7 @@
-use crate::api::{controller, dto};
+use crate::{
+    api::{controller, dto},
+    domain::repository::advert::AdvertSortBy,
+};
 use utoipa::OpenApi;
 
 #[derive(OpenApi)]
@@ -13,7 +16,7 @@ use utoipa::OpenApi;
     components(
         schemas(
             dto::ListPagingAdverts, dto::advert::AdvertDTO, dto::advert::DetailedAdvertDTO,
-            dto::advert::CreateAdvertDTO, dto::advert::UpdateAdvertDTO,
+            dto::advert::CreateAdvertDTO, dto::advert::UpdateAdvertDTO, AdvertSortBy,
         ),
     ),
     tags(

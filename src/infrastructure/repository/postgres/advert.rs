@@ -2,7 +2,7 @@ use crate::{
     domain::{
         error::{RepositoryError, RepositoryResult},
         model::advert::{Advert, CreateAdvert, DetailedAdvert, UpdateAdvert},
-        repository::advert::{AdvertQueryParams, AdvertRepository},
+        repository::advert::{AdvertQueryParams, AdvertRepository, AdvertSortBy},
     },
     infrastructure::{
         database::postgres::PostgresPool,
@@ -31,8 +31,18 @@ impl AdvertRepository for AdvertDieselRepository {
 
         let mut conn = self.pool.clone().get().unwrap();
 
-        let data = adverts
+        let mut select = adverts
             .select((dsl::id, dsl::title, dsl::price, dsl::created_at))
+            .into_boxed();
+
+        select = match params.sort_by {
+            AdvertSortBy::CreatedAtAsc => select.order_by(dsl::created_at.asc()),
+            AdvertSortBy::CreatedAtDesc => select.order_by(dsl::created_at.desc()),
+            AdvertSortBy::PriceAsc => select.order_by(dsl::price.asc()),
+            AdvertSortBy::PriceDesc => select.order_by(dsl::price.desc()),
+        };
+
+        let data = select
             .limit(params.size())
             .offset(params.offset())
             .load::<AdvertDiesel>(&mut conn)
