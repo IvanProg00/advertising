@@ -20,7 +20,7 @@ use utoipa_swagger_ui::SwaggerUi;
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
     let s = setting::Setting::from_env().unwrap();
-    env_logger::init_from_env(Env::default().default_filter_or("debug"));
+    env_logger::init_from_env(Env::default().default_filter_or("info"));
 
     let pg_pool = database::postgres::new(s.database_url.clone());
     let advert_repo = Arc::new(AdvertDieselRepository::new(pg_pool));
