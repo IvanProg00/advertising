@@ -9,6 +9,7 @@ dotenvy = "0.15"
 config = "0.13"
 serde = { version = "1", features = ["derive"] }
 diesel = { version = "2", features = ["postgres", "chrono", "r2d2"] }
+diesel_migrations = "2.1"
 chrono = { version = "0.4", features = ["serde"] }
 env_logger = "0.10"
 thiserror = "1"

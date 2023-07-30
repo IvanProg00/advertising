@@ -1,5 +1,5 @@
 use actix_web::{
-    middleware::Logger,
+    middleware,
     web::{self, Data},
     App, HttpServer,
 };
@@ -24,15 +24,15 @@ async fn main() -> std::io::Result<()> {
 
     let pg_pool = database::postgres::new(s.database_url.clone());
     let advert_repo = Arc::new(AdvertDieselRepository::new(pg_pool));
-
     let openapi = ApiDoc::openapi();
 
     HttpServer::new(move || {
         let advert_svc = AdvertService::new(advert_repo.clone());
 
         App::new()
-            .wrap(Logger::default())
-            .wrap(Logger::new("%a %{User-Agent}i"))
+            .wrap(middleware::Compress::default())
+            .wrap(middleware::Logger::default())
+            .wrap(middleware::Logger::new("%a %{User-Agent}i"))
             .app_data(Data::new(advert_svc))
             .configure(api::create_service)
             .service(
