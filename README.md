@@ -1,13 +1,30 @@
 # Advertising
 
-1. [Description](#description)
-2. [Implementation](#implementation)
-3. [Endpoints](#endpoints)
+- [Description](#description)
+- [Start](#start)
+- [Implementation](#implementation)
+- [Endpoints](#endpoints)
 
 ## Description
 
 The service creates, stores, updates and deletes adverts. Ads will be stored in a
 database. The service provides API running on top of HTTP in JSON format.
+
+## Start
+
+### Requirements
+
+- [Docker](https://docs.docker.com/desktop/install/mac-install/)
+
+### Run
+
+1. Run command to start project:
+
+   ```bash
+   docker compose up
+   ```
+
+2. Connect to **Swagger** using <http://localhost:8080/swagger-ui/>.
 
 ## Implementation
 
